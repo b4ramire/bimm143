@@ -1,0 +1,325 @@
+---
+title: 'CLASS_06: R Functions'
+author: "Berenice R. Leal"
+date: "1/23/2020"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Functions
+
+## Level 2 heding
+
+### Level 3 heading
+
+```{r}
+# This is a silly plot
+plot(1:5)
+```
+
+Lets see more about **file import** (i.e. reading files into R). Th main read function in base R is 'read.table()'
+
+
+```{r}
+read.table("test1.txt")
+```
+
+```{r}
+t1 <- read.table("test1.txt", sep=",", header=TRUE)
+t1
+```
+
+
+Or I could just use 'read.csv()' which has the arguents I want in this case!
+
+
+
+Second file
+```{r}
+read.table("test2.txt", sep="$", header=TRUE)
+```
+
+#Back to functions
+Our first example function
+
+
+```{r}
+add <- function (x, y=1) { 
+  # Sum the inout x and y
+  x + y
+}
+```
+
+Let's try using this function
+
+```{r}
+add(7,3)
+```
+
+
+How does this work with vectors as input
+```{r}
+add( c(1,2,4), 4)
+```
+
+```{r}
+add( c(1,2,4), c(1,2,4))
+```
+
+
+What is this 'range()' function you talk of?
+```{r}
+x <- c(4,4,10,3,11)
+max(x)
+min(x)
+```
+
+```{r}
+range(x)
+
+```
+
+This is our second function:
+
+```{r}
+rescale <- function(x) {
+ rng <- range(x)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale(x)
+
+rescale (1:10)
+
+#How would you get your function to work here...
+rescale( c(1,2,NA,3,10))
+
+
+```
+
+```{r}
+x <- c(1,2, NA, 3,10)
+rng <- range(x)
+rng
+```
+```{r}
+rng <- range(x, na.rm = TRUE)
+rng
+
+```
+
+
+```{r}
+rescale2 <- function(x) {
+ rng <- range(x, na.rm=TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+
+```{r}
+rescale2( c(1,2,NA,3,10) )
+```
+
+
+```{r}
+rescale3 <- function(x, na.rm=TRUE, plot=FALSE) {
+ rng <-range(x, na.rm=na.rm)
+ print("Hello")
+ 
+ answer <- (x - rng[1]) / (rng[2] - rng[1])
+ 
+ print("dont sing again")
+ 
+ if(plot) {
+ plot(answer, typ="b", lwd=4)
+ }
+ print("I can see it in ...")
+ return(answer)
+}
+```
+
+```{r}
+rescale3(x, plot=TRUE)
+```
+
+
+
+PART B
+
+Hands on Section
+
+```{r}
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+
+
+```{r}
+s1 <- read.pdb("4AKE") # kinase with drug
+```
+
+```{r}
+s1
+
+```
+Q1. What type of object is returned from the 'read.pdb()' 
+It is a list of 8 things and of class 
+
+```{r}
+class(s1)
+str(s1)
+```
+
+Q2. What does the trim.pdb() function do?
+
+```{r}
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1
+
+```
+
+Q4. What would be a better plot to compare across the different proteins? 
+1 plot with all the graphs in it
+
+```{r}
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+points(s2.b, typ="l", col="blue", lwd=2)
+points(s3.b, typ="l", col="red", lwd=2)
+
+
+
+```
+
+```{r}
+hc <- hclust( dist( rbind(s1.b, s2.b, s3.b) ) )
+plot(hc)
+
+```
+
+
+```{r}
+library(bio3d)
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+
+
+```
+
+```{r}
+
+library(bio3d)
+myplotfunction <- function(file, chain, elments, fctr) {
+  
+  # depicts data with different colors in the graph
+  plot_colors <- c("blue", "pink", "green")
+  
+  
+  # to iterate through values in file vector -read everything-
+  for (x in 1:length(file)) {
+  s1 <- read.pdb(file[x])
+
+  # Just a small modification in one of the repetitive lines to make paste more clear
+  s1.chain <- trim.pdb(s1, chain = chain, elety = elements)
+  
+  # allatoms takes in all the atom information and  
+  # selects an entire column based on the factor input 
+  atom_df <- s1.chain$atom
+
+  allatoms <- atom_df[, fctr] 
+  
+  
+  # creates the first plot
+  if (x == 1) {
+    plotb3(allatoms, sse = s1.chain, typ = "l", ylab = paste(toupper(fctr), "factor", sep = ""), col = plot_colors[x])
+    
+    # adds additional plots to first plot
+  } else {
+    lines(allatoms, col = plot_colors[x])
+  }
+  }
+  
+  # creates a legend for the graph
+  legend("topleft",cex = 0.5, inset = c(0.05, 0.05), title = "Kinases - Drug Interaction", file, fill = plot_colors)
+}
+
+# definitions of what will be inside my function
+files <- c("4AKE", "1AKE", "1E4Y")
+chains <- "A"
+elements <- "CA"
+factors <- "b"
+
+# Myfunction
+
+myplotfunction(files, chains, elements, factors)
+
+
+
+```
+
+
+
+```{r}
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+

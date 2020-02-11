@@ -1,0 +1,231 @@
+---
+title: "LECTURE09"
+author: "Berenice R. Leal"
+date: "2/4/2020"
+output: html_document
+---
+## K-means clustering
+The main k-means function in R is called 'kmeans(), Lets play it here. 
+
+```{r}
+#Generate ome example data for clustering
+
+#rnorm is to generate random data from normal distritution, 30 points, center at -3, next time 30 points centered at 3.... cbind is to combine objects by row or column.... rev reverses 
+
+tmp <- c(rnorm(30,-3), rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+plot(x)
+
+```
+
+Use the kmeans() function setting k to 2 and nstart=20
+Inspect/print the results
+Q. How many points are in each cluster? 60 points in 2 clusters: 30 points 
+Q. What ‘component’ of your result object details
+ - cluster size? 2       
+ - cluster assignment/membership?  what is membership vector km$cluster
+ - cluster center?   cluster 1 is centered at -2.956379  2.970779
+     and 2 at  2.970779 -2.956379
+Plot x colored by the kmeans cluster assignment and
+ add cluster centers as blue points
+
+
+- available components? output for the functions
+```{r}
+
+#kmeans (x, centers =2, nstart=20 iterations)
+
+
+# data is random... results may vary
+km <- kmeans(x,2,20)
+km
+
+km$cluster
+
+#how many components have what we want $$$
+
+length(km$cluster)
+table(km$cluster)
+
+
+
+```
+
+
+```{r}
+#Plot x colored by the kmeans cluster assignment and
+
+plot(x, col=km$cluster+1)
+
+# add cluster centers as blue points... the +1 changes the colors.
+
+points(km$centers, col="blue", pch=15, cex=3)
+
+
+```
+
+
+## Hierarchical Clustering in R
+
+The main Hierarchical clustering function in R is called hclust() An important point here is that you have to calculate the distance matrix deom your input data before calling 'hclust'
+For this we will use the 'dist()' function first
+```{r}
+# We will use our x again from above...
+
+d <- dist(x)
+hc <- hclust(d)
+hc
+```
+
+Folks often view the results of Hierarchical clstering graphically. Lets try passinf this to the 'plot ()' function. 
+
+```{r}
+plot(hc)
+
+#    hclust(dist(x))
+#the numbers are from the vector 1 - 60 ---- left 1 to 30, and right 31 to 60
+
+
+abline(h=6, col="red", lty=2)     #to draw a line
+abline(h=4, col="red", lty=2)  
+
+
+cutree(hc, h=6)
+
+# To get cluster membership vector I need to "cut" the tree at a certain height to yield my separate cluster branches.       
+
+# cutree(hc, h=6,)
+
+```
+
+
+```{r}
+
+gp4 <- cutree(hc, k=6)
+table(gp4)
+```
+
+
+
+MY TURN:
+
+
+```{r}
+# Step 1. Generate some example data for clustering
+x <- rbind(
+ matrix(rnorm(100, mean=0, sd = 0.3), ncol = 2), # c1
+ matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2), # c2
+ matrix(c(rnorm(50, mean = 1, sd = 0.3), # c3
+ rnorm(50, mean = 0, sd = 0.3)), ncol = 2))
+colnames(x) <- c("x", "y")
+# Step 2. Plot the data without clustering
+plot(x)
+# Step 3. Generate colors for known clusters
+# (just so we can compare to hclust results)
+col <- as.factor( rep(c("c1","c2","c3"), each=50) )
+plot(x, col=col)
+
+```
+
+MY TURN:
+
+Q. Use the dist(), hclust(), plot() and cutree()
+ functions to return 2 and 3 clusters
+ 
+```{r}
+#..........
+
+hc <- hclust(dist(x))
+
+plot(hc)
+
+abline(h=1.7, col="red")
+
+```
+
+To get cluster membership vector use 'cutree()' and then use 'table()' to tabulate up how many members in each cluster we have
+
+```{r}
+grps <- cutree(hc, k=3)
+table(grps)
+
+```
+
+Make a plot with our cluster results... When THE Data is ambiguous it isnt so effective... at the boundaries this method isnt great. 
+
+```{r}
+plot(x, col=grps)
+```
+
+
+
+
+Q. How does this compare to your known 'col' groups?
+
+
+
+
+HANDS ON SECTION:
+
+```{r}
+x <- read.csv("UK_foods.csv", row.names=1)
+x
+
+```
+
+Lets make some plots to explore our data a bit more 
+
+```{r}
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+
+#matrix of scatterplots
+```
+
+Principal Component Analysis (PCA) with the 'prcomp()' function.
+
+```{r}
+# Use the prcomp() PCA function .... t is transpose?
+pca <- prcomp ( t(x) )
+
+pca
+
+```
+
+What is in my result object 'pca'? I can check the attributes...
+
+```{r}
+attributes(pca)   #tells you what functions are available  --- 
+```
+
+```{r}
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2")
+text(pca$x[,1], pca$x[,2], colnames=(x),
+     col=c("black", "red", "blue", "green"))
+
+```
+
+```{r}
+summary(pca)
+
+
+#over 67% capture in PC1 proportion of variance
+#0.9650 = 0.6744+0.2905
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
