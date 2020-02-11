@@ -10,3 +10,8 @@ PUSH buttom to GITHUB
 >>> Going back to the github website If I click on the right corner the tiny pencil I can see it as a console... and add notes at the bottom... when clicking the downwards arrow I can add info from the website to here... 
 
 -----
+
+
+
+
+
