@@ -2,7 +2,7 @@
 title: "LECTURE09"
 author: "Berenice R. Leal"
 date: "2/4/2020"
-output: html_document
+output: github_document
 ---
 ## K-means clustering
 The main k-means function in R is called 'kmeans(), Lets play it here. 
