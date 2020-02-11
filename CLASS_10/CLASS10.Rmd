@@ -2,7 +2,7 @@
 title: "CLASS10"
 author: "Berenice R. Leal"
 date: "2/6/2020"
-output: html_document
+output: github_document
 ---
 
 First we need to import (i.e. read our input data)
