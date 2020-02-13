@@ -1,0 +1,33 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+
+
+st: (File >
+New File > R Markdown…). Chose “From
+Template” and select “GitHub Document
+
+##PDB statistics
+Here we inspect the types of structures in the main database for 3D biomolecular data - the PDB
+
+Q1: Determine the percentage of structures solved by X-Ray and Electron Microscopy. 
+
+st: go to the rcsb.org website > analyze > PDB statistics > Experimental method and molecular type (download CVS and then import it, and read the stats.)
+
+```{r}
+# read in file
+
+stats <- read.csv("Data Export Summary.csv", row.names=1)
+stats
+
+  
+#dolar $ sign to access an specific column
+
+#calculate percentage values asked for each "method"
+
+ans <- stats$Total / sum(stats$Total) *100
+names(ans) <- rownames(stats)
+round(ans, 2)
+
